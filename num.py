@@ -5,8 +5,18 @@ Typical usage example:
     pi = SuperFloat("3.1415926535", True)
     two = SuperFloat("2", True)
     2pi = two*pi
-    
+
 """
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+file_handler = logging.FileHandler('log/my.log')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
 def change_e_notation_2_LaTeX_notation(num_e_string:str) -> str: # pylint: disable=invalid-name
     """Change e notation to LaTeX notation.
 
@@ -21,6 +31,7 @@ def change_e_notation_2_LaTeX_notation(num_e_string:str) -> str: # pylint: disab
     """
     assert 'e' in num_e_string
     a, b = num_e_string.split('e')
+    logger.info(f"change_e_notation_2_LaTeX_notation: {num_e_string=} {a=} {b=}")
     return f"{a}\\times 10^{{{b}}}"
 
 def get_dot_index(num_string:str) -> int:
@@ -58,14 +69,16 @@ def count_significant_figure(num_string:str, strict=False) -> int:
     assert len(num_string) > 0
 
     i = 0 if num_string[0] != "-" else 1
-    while (i < len(num_string)) and (num_string[i] == '0' or num_string[i] == '.'): i += 1
+    while (i < len(num_string)) and (num_string[i] == '0' or num_string[i] == '.'):
+        i += 1
     dot_index = get_dot_index(num_string)
 
     k = 0
     if strict and dot_index == -1:
         while(num_string[-k -1] == '0'): k += 1
-    
-    return len(num_string) - i - (1 if (dot_index > i) else 0) - k
+    res = len(num_string) - i - (1 if (dot_index > i) else 0) - k
+    logger.debug(f"count_significant_figure: {num_string=} {strict=} {i=} {k=} {dot_index=} {res=}")
+    return res
 
 def change_float_string_2_e_notation(num_string:str) -> str:
     """Change float string notation to e notation.
@@ -101,7 +114,7 @@ def change_float_string_2_e_notation(num_string:str) -> str:
         while i < len(num_string) and (num_string[i] == '0' or num_string[i] == '.'): i += 1
         if i == 0:
             return num_string
-        return f"-{num_string[i]}.{num_string[i+1:]}e{1 - i}"
+        return f"{num_string[i]}.{num_string[i+1:]}e{1 - i}"
 
     if is_minus:
         return f"{num_string[:2]}.{num_string[2:dot_index]}{num_string[dot_index+1:]}e{dot_index - 2}"
@@ -125,6 +138,7 @@ def cut_and_round(num_string:str, target:int|float) -> str:
 
     if target == float('inf'): return num_string
     i = 1
+    logger.debug(f"cut_and_round started: {num_string=} {target=}")
     while i <= len(num_string):
         if target == count_significant_figure(num_string[:i]):
             if i == len(num_string):
@@ -133,10 +147,15 @@ def cut_and_round(num_string:str, target:int|float) -> str:
             dot_index = get_dot_index(num_string)
             if dot_index == -1: dot_index = len(num_string)
 
-            if i <= dot_index:
-                return str(int(round(float(num_string[:i] + "." + num_string[i])))) + "0"*(dot_index - i)
-            return str(round(float(num_string[:i+1]), i - dot_index - 1))
+            res = str(round(float(num_string[:i+1]), i - dot_index - 1))
+            if i < dot_index:
+                res = str(int(round(float(num_string[:i] + "." + num_string[i])))) + "0"*(dot_index - i)
+            if i == dot_index:
+                res = str(int(round(float(num_string[:i] + "." + num_string[i+1])))) + "0"*(dot_index - i)
+            logger.debug(f"cut_and_round: {num_string=} {target=} {dot_index=} {i=} {res=}")
+            return res
         i += 1
+    logger.error("cut_and_round return NaN")
     return "NaN"
 
 class SuperFloat:
@@ -242,7 +261,7 @@ class SuperFloat:
         return int(self.float)
     
     def __str__(self):
-        return self.num_e_string
+        return self.string
     
     def __neg__(self):
         return SuperFloat(str(-self.float), self.is_const)
