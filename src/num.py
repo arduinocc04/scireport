@@ -66,6 +66,7 @@ def count_significant_figure(num_string:str, strict=False) -> int:
     Raises:
         AssertionError: An error occured if num_string is empty.
     """
+    logger.debug(f"Started count_significant_figure {num_string=} {strict=}")
     assert len(num_string) > 0
 
     i = 0 if num_string[0] != "-" else 1
@@ -77,7 +78,7 @@ def count_significant_figure(num_string:str, strict=False) -> int:
     if strict and dot_index == -1:
         while(num_string[-k -1] == '0'): k += 1
     res = len(num_string) - i - (1 if (dot_index > i) else 0) - k
-    logger.debug(f"count_significant_figure: {num_string=} {strict=} {i=} {k=} {dot_index=} {res=}")
+    logger.debug(f"Finished count_significant_figure: {num_string=} {strict=} {i=} {k=} {dot_index=} {res=}")
     return res
 
 def change_float_string_2_e_notation(num_string:str) -> str:
@@ -92,6 +93,7 @@ def change_float_string_2_e_notation(num_string:str) -> str:
     Raises:
         AssertionError: An error occured if num_string is empty.
     """
+    logger.debug(f"Started change_float_string_2_e_notation {num_string=}")
     assert(len(num_string) > 0)
     dot_index = get_dot_index(num_string)
 
@@ -99,25 +101,33 @@ def change_float_string_2_e_notation(num_string:str) -> str:
     
     if dot_index == -1:
         if is_minus:
+            logger.debug(f"Finished_1 change_float_string_2_e_notation {num_string[:2]=} {num_string[2:]} {len(num_string)-2=}")
             return f"{num_string[:2]}.{num_string[2:]}e{len(num_string)-2}"
+        logger.debug(f"Finished_2 change_float_string_2_e_notation {num_string[0]=} {num_string[1:]} {len(num_string)-1=}")
         return f"{num_string[0]}.{num_string[1:]}e{len(num_string)-1}"
 
     if is_minus and dot_index == 2:
         i = 1
         while i < len(num_string) and (num_string[i] == '0' or num_string[i] == '.'): i += 1
         if i == 1:
+            logger.debug(f"Finished_3 change_float_string_2_e_notation {num_string=}")
             return num_string
+        logger.debug(f"Finished_4 change_float_string_2_e_notation {num_string[i]=} {num_string[i+1:]=} {2-i=}")
         return f"-{num_string[i]}.{num_string[i+1:]}e{2 - i}"
 
     if not is_minus and dot_index == 1:
         i = 0
         while i < len(num_string) and (num_string[i] == '0' or num_string[i] == '.'): i += 1
         if i == 0:
+            logger.debug(f"Finished_5 change_float_string_2_e_notation {num_string=}")
             return num_string
+        logger.debug(f"Finished_6_change_float_string_2_e_notation {num_string[i]=} {num_string[i+1:]=} {1-i=}")
         return f"{num_string[i]}.{num_string[i+1:]}e{1 - i}"
 
     if is_minus:
+        logger.debug(f"Finished_7 change_float_string_2_e_notation {num_string[:2]=} {num_string[2:dot_index]=} {num_string[dot_index+1:]=} {dot_index-2=}")
         return f"{num_string[:2]}.{num_string[2:dot_index]}{num_string[dot_index+1:]}e{dot_index - 2}"
+    logger.debug(f"Finished_8 change_float_string_2_e_notation {num_string[0]=} {num_string[1:dot_index]=} {num_string[dot_index+1:]=} {dot_index-1=}")
     return f"{num_string[0]}.{num_string[1:dot_index]}{num_string[dot_index+1:]}e{dot_index - 1}"
 
 def cut_and_round(num_string:str, target:int|float) -> str:

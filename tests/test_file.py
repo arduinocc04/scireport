@@ -22,7 +22,7 @@ class TestFileMethod(unittest.TestCase):
         inputName = "tests/data/test.tex"
         outputName = "tests/data/test_calced.tex"
         ideal = "tests/data/test_ideal.tex"
-        file.change_file(inputName, outputName)
+        file.change_file(inputName, outputName, "@@")
         self.assertTrue(compare_files_ignoring_space(outputName, ideal))
 
 if __name__ == "__main__":
