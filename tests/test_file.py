@@ -18,6 +18,7 @@ class TestFileMethod(unittest.TestCase):
         self.assertEqual(file.change_line("@@1.234 + 2.1@@", "@@"), "3.3")
         self.assertEqual(file.change_line("@@1.234 + !2.1@@", "@@"), "3.334")
         self.assertEqual(file.change_line("@@1.234_{1} + !2.1@@", "@@"), "3")
+        self.assertEqual(file.change_line("@@!-1.234_{1} + 2.1@@", "@@"), "1.1")
     def test_change_file_method(self):
         inputName = "tests/data/test.tex"
         outputName = "tests/data/test_calced.tex"

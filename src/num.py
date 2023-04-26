@@ -148,7 +148,7 @@ def cut_and_round(num_string:str, target:int|float) -> str:
 
     if target == float('inf'): return num_string
     i = 1
-    logger.debug(f"cut_and_round started: {num_string=} {target=}")
+    logger.debug(f"Started cut_and_round: {num_string=} {target=}")
     while i <= len(num_string):
         if target == count_significant_figure(num_string[:i]):
             if i == len(num_string):
@@ -162,10 +162,10 @@ def cut_and_round(num_string:str, target:int|float) -> str:
                 res = str(int(round(float(num_string[:i] + "." + num_string[i])))) + "0"*(dot_index - i)
             if i == dot_index:
                 res = str(int(round(float(num_string[:i] + "." + num_string[i+1])))) + "0"*(dot_index - i)
-            logger.debug(f"cut_and_round: {num_string=} {target=} {dot_index=} {i=} {res=}")
+            logger.debug(f"Finished cut_and_round: {num_string=} {target=} {dot_index=} {i=} {res=}")
             return res
         i += 1
-    logger.error("cut_and_round return NaN")
+    logger.error("Error: cut_and_round return NaN")
     return "NaN"
 
 class SuperFloat:
@@ -178,7 +178,6 @@ class SuperFloat:
         cnt_significant_figures:
         num_e_string:
     """
-    is_const, string, cnt_significant_figures, num_e_string = False, "", -1, ""
 
     def __init__(self, string:str, is_const:bool = False, target_cnt_significant_figures:int|float = -1) -> None:
         self.is_const = is_const
@@ -199,6 +198,7 @@ class SuperFloat:
                 self.num_e_string = self.string
             else:
                 self.num_e_string = change_float_string_2_e_notation(self.string)
+        logger.debug(f"SuperFloat constructed. {string=} {is_const=} {target_cnt_significant_figures=} {self.num_e_string=} {self.string=} {self.cnt_significant_figures=} {self.float=}")
 
     def __add__(self, other):
         if isinstance(other, SuperFloat):

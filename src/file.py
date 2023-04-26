@@ -34,6 +34,7 @@ def find_cmd(string:str, cmd:str) -> typing.List[int]:
     Returns:
         A array contains indexes of cmd in string.
     """
+    logger.debug(f"Started find_cmd: {string=} {cmd=}")
     ans = []
     for i in range(len(string) - len(cmd) + 1):
         flag = True
@@ -43,10 +44,10 @@ def find_cmd(string:str, cmd:str) -> typing.List[int]:
                 break
         if flag:
             ans.append(i)
-    logger.debug(f"find_cmd: {string=} {cmd=} {ans=}")
+    logger.debug(f"Finished find_cmd: {string=} {cmd=} {ans=}")
     return ans
 
-numList = [chr(ord('0') + i) for i in range(10)] + ["_", "{", "}", "!", "."]
+numList = [chr(ord('0') + i) for i in range(10)] + ["_", "{", "}", "!", ".", "-"]
 
 def change_float_string_2_SuperFloat_str(expression_num:str) -> str:
     """Change float string to SuperFloat constructor string.
@@ -57,6 +58,7 @@ def change_float_string_2_SuperFloat_str(expression_num:str) -> str:
     Returns:
         A string that can construct SuperFloat Object in eval.
     """
+    logger.debug(f"Started change_float_string_2_SuperFloat_str: {expression_num=}")
     is_const = False
     if expression_num[0] == "!":
         is_const = True
@@ -71,7 +73,7 @@ def change_float_string_2_SuperFloat_str(expression_num:str) -> str:
         expression_num = expression_num[:-i - 1]
         logger.debug(f"{i=}")
 
-    logger.debug(f"change_float_string_2_SuperFloat_str: {expression_num=} {is_const=} {sig_fig_target=}")
+    logger.debug(f"Finished change_float_string_2_SuperFloat_str: {expression_num=} {is_const=} {sig_fig_target=}")
     if sig_fig_target == -1:
         return f"num.SuperFloat('{expression_num}', {is_const})"
     return f"num.SuperFloat('{expression_num}', {is_const}, {sig_fig_target})"
@@ -85,6 +87,7 @@ def change_expression(expression:str) -> str:
     Returns:
         a string consists of SuperFloat constructors and operators which  is ideal to given expression.
     """
+    logger.debug(f"Started change_expression: {expression=}")
     resExpression = ""
     i = 0
     prev = 0
@@ -107,7 +110,7 @@ def change_expression(expression:str) -> str:
         i += 1
     if flag:
         resExpression += change_float_string_2_SuperFloat_str(expression[prev:])
-    logger.debug(f"change_expression: {expression=} {resExpression=}")
+    logger.debug(f"Finished change_expression: {expression=} {resExpression=}")
     return resExpression
 
 def change_line(line:str, cmd:str) -> str:
@@ -120,6 +123,7 @@ def change_line(line:str, cmd:str) -> str:
     Returns:
         a string that calculated expression in given line.
     """
+    logger.debug(f"Started change_line: {line=} {cmd=}")
     idxs = find_cmd(line, cmd)
     if len(idxs) == 0:
         return line
@@ -137,6 +141,7 @@ def change_line(line:str, cmd:str) -> str:
         prev = idxs[2*i + 1]+2
         logger.debug(f"change_line: {expression=} {str(res)=}")
     res_line += line[prev:]
+    logger.debug(f"Finished change_line: {line=}")
     return res_line
 
 def change_file(input_file_name, output_file_name, cmd):
@@ -150,6 +155,7 @@ def change_file(input_file_name, output_file_name, cmd):
     Returns:
         None
     """
+    logger.debug(f"Started change_file: {input_file_name=} {output_file_name=} {cmd=}")
     inputFile = open(input_file_name, "r")
     outputFile = open(output_file_name, "w")
 
@@ -160,3 +166,4 @@ def change_file(input_file_name, output_file_name, cmd):
     assert inputFile.closed
     outputFile.close()
     assert outputFile.closed
+    logger.debug(f"Finished change_file: {input_file_name=} {output_file_name=}")
