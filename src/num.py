@@ -105,7 +105,7 @@ def change_float_string_2_e_notation(num_string:str) -> str:
     if is_minus and dot_index == 2:
         i = 1
         while i < len(num_string) and (num_string[i] == '0' or num_string[i] == '.'): i += 1
-        if i == 0:
+        if i == 1:
             return num_string
         return f"-{num_string[i]}.{num_string[i+1:]}e{2 - i}"
 

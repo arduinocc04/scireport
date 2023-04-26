@@ -10,8 +10,10 @@ Example:
 """
 import typing
 import logging
-
-import num
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from src import num
 
 CMD = "@@"
 logger = logging.getLogger()
@@ -73,7 +75,7 @@ def change_expression(expression:str) -> str:
             if flag:
                 flag = False
                 num = expression[prev:i]
-                resExpression += change_expression_num_str_2_SuperFloat_str(num)
+                resExpression += change_expression_num_str_2_SuperFloat_str(num) + expression[i]
 
             else:
                 resExpression += expression[i]
@@ -98,7 +100,9 @@ def change_line(line:str, cmd:str) -> str:
         expression = line[idxs[2*i] + 2:idxs[2*i + 1]]
         res = eval(change_expression(expression))
         res_line += str(res)
+        prev = idxs[2*i + 1]+2
         logger.debug(f"change_line: {expression=} {str(res)=}")
+    res_line += line[prev:]
     return res_line
 
 def change_file(inputFileName, outputFileName):
@@ -106,7 +110,7 @@ def change_file(inputFileName, outputFileName):
     outputFile = open(outputFileName, "w")
 
     for line in inputFile:
-        change_line(line, CMD)
+        outputFile.write(change_line(line, CMD))
 
     inputFile.close()
     assert inputFile.closed
