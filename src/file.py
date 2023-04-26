@@ -25,6 +25,15 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 def find_cmd(string:str, cmd:str) -> typing.List[int]:
+    """Return start indexes of cmd in string.
+
+    Args:
+        string: a string.
+        cmd: a string..
+    
+    Returns:
+        A array contains indexes of cmd in string.
+    """
     ans = []
     for i in range(len(string) - len(cmd) + 1):
         flag = True
@@ -39,7 +48,15 @@ def find_cmd(string:str, cmd:str) -> typing.List[int]:
 
 numList = [chr(ord('0') + i) for i in range(10)] + ["_", "{", "}", "!", "."]
 
-def change_expression_num_str_2_SuperFloat_str(expression_num:str) -> str:
+def change_float_string_2_SuperFloat_str(expression_num:str) -> str:
+    """Change float string to SuperFloat constructor string.
+
+    Args:
+        expression_num: a string consists of number or expression mark or underbar, or brace or dot.
+    
+    Returns:
+        A string that can construct SuperFloat Object in eval.
+    """
     is_const = False
     if expression_num[0] == "!":
         is_const = True
@@ -54,12 +71,20 @@ def change_expression_num_str_2_SuperFloat_str(expression_num:str) -> str:
         expression_num = expression_num[:-i - 1]
         logger.debug(f"{i=}")
 
-    logger.debug(f"change_expression_num_str_2_SuperFloat_str: {expression_num=} {is_const=} {sig_fig_target=}")
+    logger.debug(f"change_float_string_2_SuperFloat_str: {expression_num=} {is_const=} {sig_fig_target=}")
     if sig_fig_target == -1:
         return f"num.SuperFloat('{expression_num}', {is_const})"
     return f"num.SuperFloat('{expression_num}', {is_const}, {sig_fig_target})"
 
 def change_expression(expression:str) -> str:
+    """Change an equation consists of float strings and operators to SuperFloat constructor strings and same operators.
+
+    Args:
+        expression: a string which represents an equation consists of float strings and operators.
+
+    Returns:
+        a string consists of SuperFloat constructors and operators which  is ideal to given expression.
+    """
     resExpression = ""
     i = 0
     prev = 0
@@ -75,17 +100,26 @@ def change_expression(expression:str) -> str:
             if flag:
                 flag = False
                 num = expression[prev:i]
-                resExpression += change_expression_num_str_2_SuperFloat_str(num) + expression[i]
+                resExpression += change_float_string_2_SuperFloat_str(num) + expression[i]
 
             else:
                 resExpression += expression[i]
         i += 1
     if flag:
-        resExpression += change_expression_num_str_2_SuperFloat_str(expression[prev:])
+        resExpression += change_float_string_2_SuperFloat_str(expression[prev:])
     logger.debug(f"change_expression: {expression=} {resExpression=}")
     return resExpression
 
 def change_line(line:str, cmd:str) -> str:
+    """Calculate expression surrounded by cmd.
+
+    Args:
+        line: A string that may contain expression surrounded by cmd
+        cmd: A marker surround expression.
+    
+    Returns:
+        a string that calculated expression in given line.
+    """
     idxs = find_cmd(line, cmd)
     if len(idxs) == 0:
         return line
@@ -105,12 +139,22 @@ def change_line(line:str, cmd:str) -> str:
     res_line += line[prev:]
     return res_line
 
-def change_file(inputFileName, outputFileName):
-    inputFile = open(inputFileName, "r")
-    outputFile = open(outputFileName, "w")
+def change_file(input_file_name, output_file_name, cmd):
+    """Calculate expression surrounded by cmd.
+    
+    Args:
+        input_file_name: a string 
+        output_file_name: a string
+        cmd: a string surrounds expression.
+
+    Returns:
+        None
+    """
+    inputFile = open(input_file_name, "r")
+    outputFile = open(output_file_name, "w")
 
     for line in inputFile:
-        outputFile.write(change_line(line, CMD))
+        outputFile.write(change_line(line, cmd))
 
     inputFile.close()
     assert inputFile.closed
