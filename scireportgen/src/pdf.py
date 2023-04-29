@@ -36,3 +36,6 @@ def get_titles_and_aims(pdf_name:str) -> typing.Tuple[typing.List[str], typing.L
     assert len(aims) == len(titles)
     return titles, aims
     
+if __name__ == "__main__":
+    titles, aims = get_titles_and_aims('asdf.pdf')
+    print(titles, aims)

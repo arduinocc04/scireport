@@ -3,7 +3,7 @@ import requests
 
 url="https://physlab.sogang.ac.kr/bbs/bbslist.do?forword=&wslID=physlab&bbsid=2089"
 
-def get_manual_of_week(week:int, download_location:str) -> None:
+def get_manual_of_week(week:int, download_location:str):
     html = requests.get(url, verify="misc/sogang-ac-kr-chain.pem").text
     bs_object = BeautifulSoup(html, "lxml")
     trs = bs_object.find_all("tr")
