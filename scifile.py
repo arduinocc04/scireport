@@ -1,6 +1,6 @@
 import sys
 import os
-from src import file
+from scicalc.src import file
 
 def change_input_file_name_nicely(filename:str) -> str:
     """append _calced at filename without extension.

@@ -20,9 +20,9 @@ class TestFileMethod(unittest.TestCase):
         self.assertEqual(file.change_line("@@1.234_{1} + !2.1@@", "@@"), "3")
         self.assertEqual(file.change_line("@@!-1.234_{1} + 2.1@@", "@@"), "1.1")
     def test_change_and_execute_file_method(self):
-        inputName = "tests/data/test.tex"
-        outputName = "tests/data/test_calced.tex"
-        ideal = "tests/data/test_ideal.tex"
+        inputName = "scicalc/tests/data/test.tex"
+        outputName = "scicalc/tests/data/test_calced.tex"
+        ideal = "scicalc/tests/data/test_ideal.tex"
         file.change_and_execute_file(inputName, outputName, "@@")
         self.assertTrue(compare_files_ignoring_space(outputName, ideal))
 
