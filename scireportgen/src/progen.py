@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from src import web
 from src import pdf
 
-def make_proj_folder(root:str, folder_name:str, title:str="") -> None:
+def make_proj_folder(root:str, folder_name:str) -> None:
     """
     /manual.pdf
     /Data
@@ -17,7 +17,7 @@ def make_proj_folder(root:str, folder_name:str, title:str="") -> None:
     os.mkdir(os.path.join(root, folder_name, "Data"))
     os.mkdir(os.path.join(root, folder_name, "tex"))
     os.mkdir(os.path.join(root, folder_name, "tex", "img"))
-    web.get_manual_of_week(get_last_week(), os.path.join(root, folder_name, "manual.pdf"))
+    title = web.get_manual_of_week(get_last_week(), os.path.join(root, folder_name, "manual.pdf"))
     titles, aims = pdf.get_titles_and_aims(os.path.join(root, folder_name, "manual.pdf"))
     exp_cnt = len(titles)
     for i in range(1, exp_cnt + 1):

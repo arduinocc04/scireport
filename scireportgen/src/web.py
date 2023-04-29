@@ -38,5 +38,8 @@ def get_manual_of_week(week:int, download_location:str):
     with open(download_location, "wb") as f:
         f.write(file.content)
 
+    title = target_tr.find_all("td")[1].text
+    return title
+
 if __name__ == "__main__":
     get_manual_of_week(2, "asdf.pdf")
