@@ -1,0 +1,106 @@
+\documentclass[chapter, a4paper]{oblivoir}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{comment}
+\usepackage{pgfplots}
+\usepackage{mathrsfs}
+\usepackage{physics}
+\usepackage{siunitx}
+\usepackage[sorting=none]{biblatex}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{tcolorbox}
+\usepackage{adjustbox}
+\usepackage{listings}
+\usepackage{fapapersize}
+\usepackage{filecontents}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{breqn}
+\usepackage{changepage}
+\usepackage{caption}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{array}
+\usepackage{xcolor,colortbl}
+\newenvironment{conditions}
+  {\\\vspace{\abovedisplayskip}\noindent\begin{tabular}{>{$}l<{$} @{${}={}$} l}}
+  {\end{tabular}\vspace{\belowdisplayskip}}
+\newcolumntype{?}{!{\vrule width 2pt}}
+\usefapapersize{*,*,1in,*,1in,*}
+\addbibresource{refs.bib}
+\pgfplotsset{compat=1.15}
+\definecolor{Gray}{gray}{0.85}
+\definecolor{LightCyan}{rgb}{0.88,1,1}
+
+\usetikzlibrary{shapes.geometric, arrows, intersections, calc, positioning, patterns, angles, quotes}
+%\renewcommand\C{\text{C}}
+%\renewcommand\P{\text{P}}
+\renewcommand{\d}[1]{\text{d} #1}
+\newcommand{\dx}{\text{d} x}
+%\renewcommand{\min}{\text{min}}
+%\renewcommand{\max}{\text{max}}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\title{\Huge !!TITLE!!}
+\author{!!AUTHOR!!}
+\date{\today}
+
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\makeatletter
+\renewcommand\section{\leftskip 0pt\@startsection {section}{1}{\z@}%
+                                   {-3.5ex \@plus -1ex \@minus -.2ex}%
+                                   {2.3ex \@plus.2ex}%
+                                   {\leftskip 0pt\normalfont\Large\bfseries}}
+\newcommand\Xsubsection{\leftskip 10pt\@startsection{subsection}{2}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalfont\large\bfseries}}
+\renewcommand\subsection[1]{\Xsubsection{#1}\leftskip 10pt}
+\newcommand\Xsubsubsection{\leftskip 20pt\@startsection{subsubsection}{3}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalfont\large\bfseries}}
+\renewcommand\subsubsection[1]{\Xsubsubsection{#1}\leftskip 20pt}
+\makeatother
+\maxsecnumdepth{subsubsection}
+\setcounter{tocdepth}{1}
+\begin{document}
+    \maketitle
+    \tableofcontents
+    \clearpage
+    !!CHAPTERS!!
+    \printbibliography[title=참고문헌]
+\end{document}

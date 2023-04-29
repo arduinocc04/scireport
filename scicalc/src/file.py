@@ -113,6 +113,14 @@ def change_expression(expression:str) -> str:
     logger.debug(f"Finished change_expression: {expression=} {resExpression=}")
     return resExpression
 
+def execute_python_code(line:str, cmd='!!') -> None:
+    logger.debug(f"Started execute_python_code {line=} {cmd=}")
+    tmp = find_cmd(line, cmd)
+    if len(tmp) == 0: return
+    idx = tmp[0]
+    exec(line[idx+2:].lstrip())
+    logger.debug(f"Finished execute_python_code {line=} {cmd=} {line[idx+2:]=} {idx=}")
+
 def change_line(line:str, cmd:str) -> str:
     """Calculate expression surrounded by cmd.
 
@@ -139,12 +147,12 @@ def change_line(line:str, cmd:str) -> str:
         res = eval(change_expression(expression))
         res_line += str(res)
         prev = idxs[2*i + 1]+2
-        logger.debug(f"change_line: {expression=} {str(res)=}")
+        logger.debug(f"Running change_line: {expression=} {str(res)=}")
     res_line += line[prev:]
     logger.debug(f"Finished change_line: {line=}")
     return res_line
 
-def change_file(input_file_name, output_file_name, cmd):
+def change_file(input_file_name:str, output_file_name:str, cmd:str) -> None:
     """Calculate expression surrounded by cmd.
     
     Args:
@@ -156,14 +164,33 @@ def change_file(input_file_name, output_file_name, cmd):
         None
     """
     logger.debug(f"Started change_file: {input_file_name=} {output_file_name=} {cmd=}")
-    inputFile = open(input_file_name, "r")
-    outputFile = open(output_file_name, "w")
+    input_file = open(input_file_name, "r")
+    output_file = open(output_file_name, "w")
 
-    for line in inputFile:
-        outputFile.write(change_line(line, cmd))
+    for line in input_file.readlines():
+        output_file.write(change_line(line, cmd))
 
-    inputFile.close()
-    assert inputFile.closed
-    outputFile.close()
-    assert outputFile.closed
+    input_file.close()
+    assert input_file.closed
+    output_file.close()
+    assert output_file.closed
+    logger.debug(f"Finished change_file: {input_file_name=} {output_file_name=}")
+
+def change_and_execute_line(line:str) -> str:
+    execute_python_code(line)
+    return change_line(line, CMD)
+
+def change_and_execute_file(input_file_name:str, output_file_name:str, cmd:str) -> None:
+    logger.debug(f"Started change_file: {input_file_name=} {output_file_name=} {cmd=}")
+    input_file = open(input_file_name, "r")
+    output_file = open(output_file_name, "w")
+
+    for line in input_file.readlines():
+        execute_python_code(line)
+        output_file.write(change_line(line, cmd))
+
+    input_file.close()
+    assert input_file.closed
+    output_file.close()
+    assert output_file.closed
     logger.debug(f"Finished change_file: {input_file_name=} {output_file_name=}")
