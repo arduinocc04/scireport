@@ -25,6 +25,6 @@ else:
 if os.path.isdir(input_file):
     for filename in os.listdir(input_file):
         output = change_input_file_name_nicely(filename)
-        file.change_file(filename, output, "@@")
+        file.change_and_execute_file(filename, output, "@@")
 else:
-    file.change_file(input_file, outputFile, "@@")
+    file.change_and_execute_file(input_file, outputFile, "@@")

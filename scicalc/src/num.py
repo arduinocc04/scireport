@@ -8,12 +8,13 @@ Typical usage example:
 
 """
 import logging
+import os
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-file_handler = logging.FileHandler('log/my.log')
+file_handler = logging.FileHandler(os.path.join(os.path.dirname(__file__), '..', "..", "log", "my.log"))
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
@@ -143,12 +144,14 @@ def cut_and_round(num_string:str, target:int|float) -> str:
     Raises:
         AssertionsError: An error occured if significant figures of num_string is smaller than target.
     """
+    logger.debug(f"Started cut_and_round: {num_string=} {target=}")
     if target != float('inf'):
-        assert(count_significant_figure(num_string) >= target)
+        if count_significant_figure(num_string) < target:
+            num_string += "0"*(target - count_significant_figure(num_string) + 5)
+        # assert(count_significant_figure(num_string) >= target)
 
     if target == float('inf'): return num_string
     i = 1
-    logger.debug(f"Started cut_and_round: {num_string=} {target=}")
     while i <= len(num_string):
         if target == count_significant_figure(num_string[:i]):
             if i == len(num_string):

@@ -3,7 +3,7 @@ import typing
 
 import pdftotext
 
-exp_title_pattern = re.compile(r"실험\d+-{0,1}\d?\..+")
+exp_title_pattern = re.compile(r"실험\d+-{0,1}\d?\.?.+")
 aim_pattern = re.compile(r"1 ?\. ?목 ?적.+2 ?\.", re.DOTALL)
 
 def get_titles_and_aims(pdf_name:str) -> typing.Tuple[typing.List[str], typing.List[str]]:

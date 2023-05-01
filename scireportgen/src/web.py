@@ -1,10 +1,11 @@
 from bs4 import BeautifulSoup
 import requests
+import os
 
 url="https://physlab.sogang.ac.kr/bbs/bbslist.do?forword=&wslID=physlab&bbsid=2089"
 
 def get_manual_of_week(week:int, download_location:str):
-    html = requests.get(url, verify="misc/sogang-ac-kr-chain.pem").text
+    html = requests.get(url, verify=os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "..", "misc", "sogang-ac-kr-chain.pem")).text
     bs_object = BeautifulSoup(html, "lxml")
     trs = bs_object.find_all("tr")
     
@@ -34,7 +35,7 @@ def get_manual_of_week(week:int, download_location:str):
     if res is None:
         raise ModuleNotFoundError
 
-    file = requests.get(res, verify="misc/sogang-ac-kr-chain.pem")
+    file = requests.get(res, verify=os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "..", "misc", "sogang-ac-kr-chain.pem"))
     with open(download_location, "wb") as f:
         f.write(file.content)
 

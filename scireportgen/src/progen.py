@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from src import web
 from src import pdf
 
-def make_proj_folder(root:str, folder_name:str) -> None:
+def make_proj_folder(root:str, folder_name:str, week:int) -> None:
     """
     /manual.pdf
     /Data
@@ -17,13 +17,15 @@ def make_proj_folder(root:str, folder_name:str) -> None:
     os.mkdir(os.path.join(root, folder_name, "Data"))
     os.mkdir(os.path.join(root, folder_name, "tex"))
     os.mkdir(os.path.join(root, folder_name, "tex", "img"))
-    title = web.get_manual_of_week(get_last_week(), os.path.join(root, folder_name, "manual.pdf"))
+    title = web.get_manual_of_week(week, os.path.join(root, folder_name, "manual.pdf"))
     titles, aims = pdf.get_titles_and_aims(os.path.join(root, folder_name, "manual.pdf"))
     exp_cnt = len(titles)
+    f = open(os.path.join(root, folder_name, "tex", "refs.bib"), "w")
+    f.close()
     for i in range(1, exp_cnt + 1):
         os.mkdir(os.path.join(root, folder_name, "tex", f"ex{i}"))
         with open(os.path.join(root, folder_name, "tex", f"ex{i}", f"ex{i}.tex"), "w") as f:
-            with open("scireportgen/data/ex_template.tex", "r") as g:
+            with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "data", "ex_template.tex"), "r") as g:
                 template = g.readlines()
             for j in range(len(template)):
                 template[j] = template[j].replace("!!aim!!", aims[i-1]).replace("!!num!!", str(i))
@@ -36,15 +38,15 @@ def make_proj_folder(root:str, folder_name:str) -> None:
         f = open(os.path.join(root, folder_name, "tex", f"ex{i}", f"ex{i}Question.tex"), "w")
         f.close()
         with open(os.path.join(root, folder_name, "tex", f"ex{i}", f"ex{i}Discussion.tex"), "w") as f:
-            with open("scireportgen/data/exDiscussion_template.tex", "r") as g:
+            with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "data", "exDiscussion_template.tex"), "r") as g:
                 template = g.readlines()
             for line in template:
                 f.write(line)
     with open(os.path.join(root, folder_name, "tex", "main.tex"), 'w') as f:
-        with open("scireportgen/data/main_template.tex", "r") as g:
+        with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "data", "main_template.tex"), "r") as g:
             template = g.readlines()
         
-        with open("misc/author.data", "r") as g:
+        with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "..", "misc", "author.data"), "r") as g:
             author = g.readline().rstrip()
 
         chapters = ""
@@ -57,14 +59,14 @@ def make_proj_folder(root:str, folder_name:str) -> None:
             f.write(line)
 
 def get_last_week() -> int:
-    with open("misc/last_week.data", "r") as f:
+    with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "..", "misc", "last_week.data"), "r") as f:
         res = int(f.readline())
     return res
 
 def update_last_week(week:int) -> None:
-    with open("misc/last_week.data", "w") as f:
+    with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "..", "misc", "last_week.data"), "w") as f:
         f.write(str(week))
 
 if __name__ == "__main__":
     exp_day = input("날짜를 입력하시오. (YYYY-MM-DD) >>> ")
-    make_proj_folder(os.getcwd(), exp_day)
+    make_proj_folder(os.getcwd(), exp_day, get_last_week())

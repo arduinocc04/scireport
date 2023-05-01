@@ -13,14 +13,16 @@ import logging
 import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', "..")))
 from src import num
-
+from scireportgen.src.latex_helper import make_textwidth_table_with_tabularx
+from scireportgen.src.latex_helper import make_textwidth_table_with_multirow
 CMD = "@@"
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-file_handler = logging.FileHandler('log/my.log')
+file_handler = logging.FileHandler(os.path.join(os.path.dirname(__file__), '..', "..", "log", "my.log"))
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
@@ -177,8 +179,9 @@ def change_file(input_file_name:str, output_file_name:str, cmd:str) -> None:
     logger.debug(f"Finished change_file: {input_file_name=} {output_file_name=}")
 
 def change_and_execute_line(line:str) -> str:
-    execute_python_code(line)
-    return change_line(line, CMD)
+    tmp = change_line(line, CMD)
+    execute_python_code(tmp)
+    return tmp
 
 def change_and_execute_file(input_file_name:str, output_file_name:str, cmd:str) -> None:
     logger.debug(f"Started change_file: {input_file_name=} {output_file_name=} {cmd=}")
@@ -186,8 +189,9 @@ def change_and_execute_file(input_file_name:str, output_file_name:str, cmd:str) 
     output_file = open(output_file_name, "w")
 
     for line in input_file.readlines():
-        execute_python_code(line)
-        output_file.write(change_line(line, cmd))
+        tmp = change_line(line, cmd)
+        execute_python_code(tmp)
+        output_file.write(tmp)
 
     input_file.close()
     assert input_file.closed
