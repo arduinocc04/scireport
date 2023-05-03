@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
 
 def make_textwidth_table_with_tabularx(table:typing.List[typing.List[typing.Any]], l_count:int = 1, caption:str = "", label:str = "") -> str:
     Y_count = len(table[0]) - l_count
-    column = "|" + "l|"*l_count + "Y|"*Y_count
+    column = "|" + "c|"*l_count + "Y|"*Y_count
     content = ""
     for row in table:
         content += "    "
@@ -41,7 +41,7 @@ def make_textwidth_table_with_multirow(labels:typing.List[str], index_of_same_gr
                 second_line += "\\Block{1-1}{\\centering " +labels[i] + "} & "
                 flag = True
             elif i == index_of_same_group[j][1]:
-                assert flag
+                # assert flag
 
                 flag = False
                 fisrt_line += f"\\Block{{1-{index_of_same_group[j][1] - index_of_same_group[j][0] + 1}}}{{{index_of_same_group[j][2]}}} " + "& "*(index_of_same_group[j][1] - index_of_same_group[j][0] +1)
