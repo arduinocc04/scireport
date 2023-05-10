@@ -166,10 +166,11 @@ def cut_and_round(num_string:str, target:int|float) -> str:
             if i == dot_index:
                 res = str(int(round(float(num_string[:i] + "." + num_string[i+1])))) + "0"*(dot_index - i)
             logger.debug(f"Finished cut_and_round: {num_string=} {target=} {dot_index=} {i=} {res=}")
+            res += '0'*(target - count_significant_figure(res))
             return res
         i += 1
     logger.error("Error: cut_and_round return NaN")
-    return "NaN"
+    return "0"
 
 class SuperFloat:
     """enhanced version of float.
