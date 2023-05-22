@@ -33,7 +33,14 @@ def get_titles_and_aims(pdf_name:str) -> typing.Tuple[typing.List[str], typing.L
                 aim = aim.replace(".", ".\n")
                 aim = aim.replace(",", ",\n")
                 aims.append(aim)
-    assert len(aims) == len(titles)
+    if len(aims) != len(titles):
+        print(aims)
+        indexes = [int(i) for i in input("aims 에서 남기고 싶은 인덱스를 스페이스로 구분해서 입력하세요 >>>").split()]
+        aims = [aims[i] for i in indexes]
+        print(titles)
+        indexes = [int(i) for i in input("titles 에서 남기고 싶은 인덱스를 스페이스로 구분해서 입력하세요 >>>").split()]
+        titles = [titles[i] for i in indexes]
+
     return titles, aims
     
 if __name__ == "__main__":
